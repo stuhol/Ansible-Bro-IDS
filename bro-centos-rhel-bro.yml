@@ -1,0 +1,32 @@
+# Bro for CentOS RHEL
+
+# Need to enable optional repos to install most devel packages
+
+- name: Install build tools
+  yum: name={{item}} state=latest update_cache=true
+  with_items:
+  - cmake
+  - make
+  - gcc
+  - gcc-c++
+  - flex
+  - bison
+  - libpcap-devel
+  - openssl-devel
+  - python-devel
+  - swig
+  - zlib-devel
+
+- name: Remove exsiting Bro archives and directories
+  file: path={{ item }} state=absent
+  with_fileglob: /tmp/bro*
+  
+- name: Download and untar Bro
+  unarchive:
+    src: "{{bro_source_url}}"
+    dest: /tmp/
+    remote_src: yes
+
+- name: Configure, make, make install Bro
+  shell: cd /tmp/bro* && ./configure && make && make install
+ 

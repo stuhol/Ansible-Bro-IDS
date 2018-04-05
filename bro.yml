@@ -1,0 +1,58 @@
+---
+- hosts: remote
+
+  vars:
+    use_binpac: false
+    ntop_ubuntu_repo: http://apt-stable.ntop.org/16.04/all/apt-ntop-stable.deb
+    ntop_centos_repo: http://packages.ntop.org/centos-stable/epel-7.repo
+    bro_source_url: https://www.bro.org/downloads/bro-2.5.3.tar.gz
+    binpac_source_url: https://www.bro.org/downloads/binpac-0.48.tar.gz
+    http_proxy: http://<proxy hostname>:<proxy port>
+
+  environment:
+    #http_proxy: "{{http_proxy}}"
+    #https_proxy: "{{http_proxy}}"
+  
+  become: yes
+  become_user: root
+
+  tasks:
+  # Install pf_ring on ubuntu
+  - name: Install pf_ring on Ubuntu
+    include_tasks: bro-ubuntu-pf_ring.yml
+    when: ansible_distribution == "Ubuntu" and 
+          vars.use_pf_ring == true
+
+  # Install pf_ring on CentOS and RHEL
+  - name: Install pf_ring on CentOS and RHEL 
+    include_tasks: bro-centos-rhel-pf_ring.yml
+    when: (ansible_distribution == "CentOS" or 
+           ansible_distribution == "Red Hat Enterprise Linux" or 
+           ansible_distribution == "RedHat") and
+          vars.use_pf_ring == true
+
+  # Install BinPAC on Ubuntu
+  - name: Install BinPAC on Ubuntu
+    include_tasks: bro-ubuntu-binpac.yml
+    when: ansible_distribution == "Ubuntu" and
+          vars.use_binpac == true
+
+  # Install BinPAC on CentOS and RHEL
+  - name: Install BinPAC on CentOS and RHEL 
+    include_tasks: bro-centos-rhel-binpac.yml
+    when: (ansible_distribution == "CentOS" or 
+           ansible_distribution == "Red Hat Enterprise Linux" or 
+           ansible_distribution == "RedHat") and
+          vars.use_binpac == true
+
+  # Install Bro on Ubuntu
+  - name: Install Bro on Ubuntu
+    include_tasks: bro-ubuntu-bro.yml
+    when: ansible_distribution == "Ubuntu"
+
+  # Install Bro on CentOS and RHEL
+  - name: Install Bro on CentOS and RHEL
+    include_tasks: bro-centos-rhel-bro.yml
+    when: (ansible_distribution == "CentOS" or 
+           ansible_distribution == "Red Hat Enterprise Linux" or 
+           ansible_distribution == "RedHat")

@@ -1,0 +1,16 @@
+# PF_RING for CentOS / RHEL
+tasks:
+  
+  - name: Download pf_ring
+    get_url: 
+      url: http://packages.ntop.org/centos-stable/epel-7.repo
+      dest: /etc/yum.repos.d/epel.repo
+      mode: 0755
+  - name: Remove zeromq3
+    package:
+      name: zeromq3
+      state: absent
+  - name: Add pf_ring package
+    package:
+      name: pfring
+      state: latest

@@ -1,0 +1,25 @@
+# Bro for Ubuntu
+
+- name: Check if pf_ring is installed
+  command: pf_ringctl
+  register: pf_ring_check
+  ignore_errors: yes
+
+- name: Install pf_ring
+  block:
+  - get_url: 
+      url: "{{ntop_ubuntu_repo}}"
+      dest: /tmp/apt-ntop-stable.deb
+      mode: 0755
+
+  - apt: 
+      deb: /tmp/apt-ntop-stable.deb
+
+  - apt:
+      autoclean: yes
+
+  - apt:
+      name: pfring
+      update_cache: yes
+
+  when: pf_ring_check.rc != 1
