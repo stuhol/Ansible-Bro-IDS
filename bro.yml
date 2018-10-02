@@ -2,7 +2,8 @@
 - hosts: remote
 
   vars:
-    use_binpac: false
+    use_binpac: true
+    use_pf_ring: false
     ntop_ubuntu_repo: http://apt-stable.ntop.org/16.04/all/apt-ntop-stable.deb
     ntop_centos_repo: http://packages.ntop.org/centos-stable/epel-7.repo
     bro_source_url: https://www.bro.org/downloads/bro-2.5.3.tar.gz
